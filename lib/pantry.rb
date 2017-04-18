@@ -47,28 +47,43 @@ class Pantry
   def what_can_i_make
     options = []
     cookbook.each do |recipe|
-      enough_amounts = []
-      recipe.ingredients.each do |item, amount|
-        if amount <= stock[item]
-          enough_amounts << true
-        else
-          enough_amounts << false
-        end
-      end
-      add_options(options,recipe, enough_amounts)
+      check_if_recipe_is_an_option(recipe, options)
     end
     options
   end
 
-  # def check_amounts(item, amount)
-    
-  # end
-
-  def add_options(options,recipe, enough_amounts)
-    options << recipe.name if enough_amounts.all? { |is_there| is_there == true } 
+  def check_if_recipe_is_an_option(recipe, options)
+    enough_amounts = []
+    recipe.ingredients.each do |item, amount|
+      check_amounts(item, amount, enough_amounts)
+    end
+    add_options(options,recipe, enough_amounts)
   end
 
-  def how_many_i_can_make
-    
+  def check_amounts(item, amount, enough_amounts)
+    if amount <= stock[item]
+      enough_amounts << true
+    else
+      enough_amounts << false
+    end
+  end
+
+  def add_options(options,recipe, enough_amounts)
+    if enough_amounts.all? { |is_there| is_there == true }
+      options << recipe.name 
+    end
+  end
+
+  def how_many_can_i_make
+    how_many = {}
+    binding.pry
+    what_can_i_make.each do |recipe|
+      idx = cookbook.index(recipe)
+      times = []
+      cookbook[idx].ingredients.each do |item, amount|
+        times << (stock[item] / amount)
+      end
+      how_many[recipe] = times.min
+    end
   end
 end
