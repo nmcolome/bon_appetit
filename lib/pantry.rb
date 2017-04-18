@@ -76,14 +76,18 @@ class Pantry
 
   def how_many_can_i_make
     how_many = {}
-    binding.pry
+    # binding.pry
     what_can_i_make.each do |recipe|
-      idx = cookbook.index(recipe)
-      times = []
-      cookbook[idx].ingredients.each do |item, amount|
-        times << (stock[item] / amount)
+      cookbook.each do |recipe_obj|
+        if recipe_obj.name == recipe
+        times = []
+        cookbook.ingredients.each do |item, amount|
+          times << (stock[item] / amount)
+        end
+        how_many[recipe] = times.min
       end
-      how_many[recipe] = times.min
     end
+  end
+  
   end
 end
