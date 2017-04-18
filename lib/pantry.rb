@@ -76,7 +76,7 @@ class Pantry
 
   def how_many_can_i_make
     how_many = {}
-    # binding.pry
+    binding.pry
     what_can_i_make.each do |recipe|
       cookbook.each do |recipe_obj|
         if recipe_obj.name == recipe
