@@ -32,7 +32,11 @@ class Pantry
   end
 
   def print_shopping_list
-    
+    nothing = String.new
+    shopping_list.each do |item, amount|
+      nothing << "* #{item}: #{amount}\n"
+    end
+    nothing.chop
   end
 
 end
