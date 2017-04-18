@@ -99,4 +99,20 @@ class PantryTest < Minitest::Test
     expected = ["Pickles", "Peanuts"]
     assert_equal expected, @pantry.what_can_i_make
   end
+
+  def test_it_returns_how_many_can_i_make_with_what_i_have
+    @pantry.add_to_cookbook(@r1)
+    @pantry.add_to_cookbook(@r2)
+    @pantry.add_to_cookbook(@r3)
+
+    @pantry.restock("Cheese", 10)
+    @pantry.restock("Flour", 20)
+    @pantry.restock("Brine", 40)
+    @pantry.restock("Cucumbers", 40)
+    @pantry.restock("Raw nuts", 20)
+    @pantry.restock("Salt", 20)
+
+    expected = {"Brine Shot" => 4, "Peanuts" => 2}
+    assert_equal expected, @pantry.how_many_can_i_make
+  end
 end

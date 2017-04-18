@@ -45,7 +45,7 @@ class Pantry
   end
 
   def what_can_i_make
-    recipe_options = []
+    options = []
     cookbook.each do |recipe|
       enough_amounts = []
       recipe.ingredients.each do |item, amount|
@@ -55,11 +55,20 @@ class Pantry
           enough_amounts << false
         end
       end
-      if enough_amounts.all? { |affirmation| affirmation == true } 
-        recipe_options << recipe.name 
-      end
+      add_options(options,recipe, enough_amounts)
     end
-    recipe_options
+    options
   end
 
+  # def check_amounts(item, amount)
+    
+  # end
+
+  def add_options(options,recipe, enough_amounts)
+    options << recipe.name if enough_amounts.all? { |is_there| is_there == true } 
+  end
+
+  def how_many_i_can_make
+    
+  end
 end
