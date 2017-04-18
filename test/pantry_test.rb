@@ -15,6 +15,18 @@ class PantryTest < Minitest::Test
     @r_2.add_ingredient("Noodles", 10)
     @r_2.add_ingredient("Sauce", 10)
     @r_2.add_ingredient("Cheese", 5)
+
+    @r1 = Recipe.new("Cheese Pizza")
+    @r1.add_ingredient("Cheese", 20)
+    @r1.add_ingredient("Flour", 20)
+
+    @r2 = Recipe.new("Pickles")
+    @r2.add_ingredient("Brine", 10)
+    @r2.add_ingredient("Cucumbers", 30)
+
+    @r3 = Recipe.new("Peanuts")
+    @r3.add_ingredient("Raw nuts", 10)
+    @r3.add_ingredient("Salt", 10)
   end
 
   def test_it_exists
@@ -61,17 +73,30 @@ class PantryTest < Minitest::Test
     assert_equal output, @pantry.print_shopping_list
   end
 
-  def setup_2
-    @r1 = Recipe.new("Cheese Pizza")
-    @r1.add_ingredient("Cheese", 20)
-    @r1.add_ingredient("Flour", 20)
+  def test_it_can_add_recipes_to_cookbook
+    @pantry.add_to_cookbook(@r1)
+    @pantry.add_to_cookbook(@r2)
+    @pantry.add_to_cookbook(@r3)
 
-    @r2 = Recipe.new("Pickles")
-    @r2.add_ingredient("Brine", 10)
-    @r2.add_ingredient("Cucumbers", 30)
+    assert_instance_of Recipe, @pantry.cookbook.first
+    assert_equal "Cheese Pizza", @pantry.cookbook.first.name
+    ingredients = {"Cheese"=>20, "Flour"=>20}
+    assert_equal ingredients, @pantry.cookbook.first.ingredients
+  end
 
-    @r3 = Recipe.new("Peanuts")
-    @r3.add_ingredient("Raw nuts", 10)
-    @r3.add_ingredient("Salt", 10)
+  def test_it_returns_what_I_can_make_with_ingredients_i_already_have
+    @pantry.add_to_cookbook(@r1)
+    @pantry.add_to_cookbook(@r2)
+    @pantry.add_to_cookbook(@r3)
+
+    @pantry.restock("Cheese", 10)
+    @pantry.restock("Flour", 20)
+    @pantry.restock("Brine", 40)
+    @pantry.restock("Cucumbers", 40)
+    @pantry.restock("Raw nuts", 20)
+    @pantry.restock("Salt", 20)
+
+    expected = ["Pickles", "Peanuts"]
+    assert_equal expected, @pantry.what_can_i_make
   end
 end
